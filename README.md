@@ -3,13 +3,14 @@
 Two scripts for different use cases:
 
 1. **`simple_caffeinate.sh`** - Just prevent system sleep (recommended)
-2. **`activity_simulator.sh`** - Simulate user activity to fool apps
+2. **`work_tools.sh`** - Advanced activity simulator & wake mode with installation
 
 ---
 
 ## Simple Caffeinate (Recommended)
 
 ### Features
+
 - Works on both AC power and battery
 - Zero system interference
 - No disk wear or resource waste
@@ -18,26 +19,33 @@ Two scripts for different use cases:
 ### Usage
 
 Make script executable (first time only):
+
 ```bash
 chmod +x simple_caffeinate.sh
 ```
 
 ### Enable caffeinate mode
+
 ```bash
 ./simple_caffeinate.sh enable
 ```
+
 Prevents system from sleeping until disabled.
 
 ### Disable caffeinate mode
+
 ```bash
 ./simple_caffeinate.sh disable
 ```
+
 Returns system to normal sleep behavior.
 
 ### Check status
+
 ```bash
 ./simple_caffeinate.sh status
 ```
+
 Shows if caffeinate mode is currently active.
 
 ## Examples
@@ -61,6 +69,7 @@ Shows if caffeinate mode is currently active.
 ```
 
 ### What it prevents
+
 - Display sleep
 - System idle sleep
 - System sleep on AC power
@@ -68,6 +77,7 @@ Shows if caffeinate mode is currently active.
 - Disk idle sleep
 
 ### Notes
+
 - Uses macOS built-in `caffeinate` command
 - Safe and official Apple solution
 - Apps will still show you as "away" (honest approach)
@@ -75,79 +85,130 @@ Shows if caffeinate mode is currently active.
 
 ---
 
-## Activity Simulator (Advanced)
+## Work Tools (Advanced)
 
-**⚠️ Use with caution - simulates fake user activity**
+> **⚠️ Use with caution - simulates fake user activity**
 
-### Features
+### Key Features
+
+- All-in-one activity simulator and wake mode
+- Interactive menu interface
+- Timer-based operation
+- Installation script with aliases
 - Prevents system sleep AND fools apps
-- Minimal mouse movement (1 pixel)
-- Safe key press (F15 - rarely used)
+- Minimal mouse movement and safe key presses
 - System activity simulation
 - Apps will think you're active
 
-### Usage
+### Installation
 
-Make script executable (first time only):
+Run the installer:
+
 ```bash
-chmod +x activity_simulator.sh
+./work_tools.sh install
 ```
 
-#### Enable activity simulation
+This will:
+
+- Copy script to `~/.local/bin/work-tools`
+- Add to PATH in your shell config
+- Create useful aliases
+- Optionally install cliclick for better mouse control
+
+After installation, restart your shell:
+
 ```bash
-./activity_simulator.sh enable
+exec $SHELL
 ```
-Starts simulating user activity every 30 seconds.
 
-#### Disable activity simulation
+### Basic Usage
+
+#### Interactive Menu
+
 ```bash
-./activity_simulator.sh disable
+work-tools menu
+# or just
+work-tools
 ```
-Stops all simulation and allows normal sleep.
 
-#### Check status
+#### Command Line
+
 ```bash
-./activity_simulator.sh status
+# Activity simulation (default 8 hours)
+work-tools as [minutes]
+
+# Stop activity
+work-tools ax
+
+# Wake mode (infinite by default)
+work-tools ws [minutes]
+
+# Stop wake
+work-tools wx
+
+# Stop all
+work-tools stop
+
+# Status
+work-tools st
 ```
-Shows if activity simulation is running.
 
-#### Install better mouse control (optional)
+#### Aliases (after installation)
+
 ```bash
-./activity_simulator.sh install-cliclick
+work-start    # Start 8h activity
+work-stop     # Stop all
+work-status   # Show status
+work-menu     # Interactive menu
+wake-on       # Wake mode on
+wake-off      # Wake mode off
+wt            # Short alias
 ```
-Installs cliclick for more precise mouse control.
 
-### Examples
+### Usage Examples
 
 ```bash
-# Start fooling apps
-./activity_simulator.sh enable
-# Output: Starting activity simulator...
-#         Activity simulator enabled (simulating activity every 30s)
+# Install first
+./work_tools.sh install
 
-# Check if it's running
-./activity_simulator.sh status
-# Output: Activity simulator is running (PID: 12345)
-#         Caffeinate is also active (PID: 12346)
+# Start 4 hour activity simulation
+work-tools as 240
 
-# Stop simulation
-./activity_simulator.sh disable
-# Output: Activity simulator disabled
+# Check status
+work-tools st
+# Output:
+# ═══ Status ═══
+#
+# ✓ Activity (12345)
+#   ⏱ 3h 58m
+#   [14:32:15] Mouse
+#
+# ✗ Wake
+
+# Start wake mode for 2 hours
+work-tools ws 120
+
+# Stop everything
+work-tools stop
 ```
 
 ### What it simulates
-- Mouse movement (1 pixel, returns to original position)
-- F15 key press (safe, non-functional key)
+
+- Mouse movement (random positions, requires cliclick)
+- Arrow key presses (safe navigation keys)
 - Clipboard access (creates system activity)
 - Prevents all sleep modes
 
 ### Safety measures
-- Uses F15 key (rarely mapped to functions)
-- Minimal mouse movement that's barely noticeable
+
+- Uses safe keys (arrow keys, F15)
+- Minimal mouse movement
 - Graceful error handling
 - Clean process management
+- Timer auto-stop with notifications
 
-### Notes
+### Important Notes
+
 - More resource usage than simple caffeinate
 - May interfere with precision tasks
 - Some security software may detect this
